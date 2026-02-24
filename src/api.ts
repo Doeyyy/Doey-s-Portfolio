@@ -4,7 +4,7 @@ import type { ProjectData } from './types/content';
 
 const api = axios.create({
 //   baseURL: 'http://localhost:8000/api/', // Update for production
-  baseURL: import.meta.env.VITE_API_URL || 'https://portfolioend-7j64.onrender.com/api/api-token-auth/',
+  baseURL: import.meta.env.VITE_API_URL ,
 });
 
 // Intercept requests to inject the token

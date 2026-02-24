@@ -5,7 +5,7 @@ import { useProjects } from "@/contexts/ProjectsContext";
 import type { ProjectData, ContentBlock } from "@/types/content";
 import { genId } from "@/types/content";
 import axios from "axios";
-import { uploadMedia } from "@/api";
+import api,  { uploadMedia } from "@/api";
 import {
   ArrowLeft, Plus, Type, Heading, ImageIcon, Video, LayoutGrid,
   Trash2, GripVertical, Save, Eye, X, ChevronDown
@@ -33,7 +33,7 @@ const PasswordGate = ({ onUnlock }: { onUnlock: () => void }) => {
     setError(false);
 
     try {
-      const response = await axios.post('http://localhost:8000/api/api-token-auth/', {
+      const response = await api.post('api-token-auth/', {
         username,
         password
       });
