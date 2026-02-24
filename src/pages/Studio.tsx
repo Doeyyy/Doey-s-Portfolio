@@ -396,9 +396,14 @@ const ProjectEditor = ({ initial, onSave, onCancel }: {
     const slug = project.slug || project.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
     const payload = { ...project, slug };
     
-    // Clean the image field for Django backend
+    // Clean the image field for the Django backend
     if (payload.image === "") {
       (payload as any).image = null; 
+    } 
+    // THE FIX: If the image is already an S3 URL, remove it from the payload
+    // so DRF doesn't try to validate it as a new Base64 string!
+    else if (typeof payload.image === 'string' && payload.image.startsWith('http')) {
+      delete (payload as any).image;
     }
 
     onSave(payload);
