@@ -42,11 +42,13 @@ const ContentBlockRenderer = ({ block, index }: { block: ContentBlock; index: nu
           transition={{ delay, duration: 0.7 }}
           className="mb-10 -mx-4 md:-mx-8"
         >
-          <div className="overflow-hidden rounded-xl border border-border">
+          {/* Flex center keeps tall images looking cinematic */}
+          <div className="overflow-hidden rounded-xl border border-border bg-black/5 flex justify-center">
             <img
               src={block.src}
               alt={block.alt}
-              className="w-full h-auto object-cover"
+              /* CHANGED to h-auto and added a max height */
+              className="w-full h-auto max-h-[85vh] object-contain"
               loading="lazy"
             />
           </div>
