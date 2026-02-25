@@ -58,7 +58,24 @@ const ContentBlockRenderer = ({ block, index }: { block: ContentBlock; index: nu
         </motion.figure>
       );
 
-    case "video":
+    case "video": {
+      let videoUrl = block.src;
+
+      // 1. Check if the browser is going to think it's a local file.
+      // If it doesn't start with http, force your absolute Cloudinary URL onto it!
+      if (videoUrl && !videoUrl.startsWith('http')) {
+        const cleanPath = videoUrl.startsWith('/') ? videoUrl.slice(1) : videoUrl;
+        videoUrl = `https://res.cloudinary.com/dvivrsime/${cleanPath}`;
+      }
+
+      // 2. Ensure Cloudinary routes it through the video player and adds .mp4
+      if (videoUrl && videoUrl.includes('cloudinary.com')) {
+        videoUrl = videoUrl.replace('/image/upload/', '/video/upload/');
+        if (!videoUrl.match(/\.(mp4|webm|ogg)$/i)) {
+          videoUrl += '.mp4';
+        }
+      }
+
       return (
         <motion.figure
           initial={{ opacity: 0, y: 30 }}
@@ -67,11 +84,15 @@ const ContentBlockRenderer = ({ block, index }: { block: ContentBlock; index: nu
           transition={{ delay, duration: 0.7 }}
           className="mb-10 -mx-4 md:-mx-8"
         >
-          <div className="overflow-hidden rounded-xl border border-border bg-card aspect-video">
+          {/* REMOVED 'aspect-video' from here */}
+          <div className="overflow-hidden rounded-xl border border-border bg-black/5 flex justify-center">
             <video
-              src={block.src}
+              src={videoUrl}
               controls
-              className="w-full h-full object-cover"
+              playsInline
+              muted
+              /* CHANGED to h-auto max-h-[85vh] so it never overflows the screen */
+              className="w-full h-auto max-h-[85vh] object-contain"
               preload="metadata"
             />
           </div>
@@ -82,6 +103,7 @@ const ContentBlockRenderer = ({ block, index }: { block: ContentBlock; index: nu
           )}
         </motion.figure>
       );
+    }
 
     case "gallery":
       return (
